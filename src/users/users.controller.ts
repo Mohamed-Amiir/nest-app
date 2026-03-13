@@ -1,4 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { CreateUserDto } from './dto/createuser.dto';
+// import { UpdateUserDto } from './dto/updateuser.dto';
+import { UserResponseDto } from './dto/response.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -11,7 +14,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<UserResponseDto> {
     return this.usersService.findOne(Number(id));
   }
 
@@ -23,20 +26,8 @@ export class UsersController {
   @Post()
   create(
     @Body()
-    body: {
-      name: string;
-      email: string;
-      password: string;
-      phone_number: string;
-      age: number;
-    },
-  ) {
-    return this.usersService.createUser(
-      body.name,
-      body.email,
-      body.password,
-      body.phone_number,
-      body.age,
-    );
+    dto: CreateUserDto,
+  ): Promise<UserResponseDto> {
+    return this.usersService.createUser(dto);
   }
 }
